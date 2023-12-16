@@ -1,0 +1,36 @@
+
+
+pipeline {
+    agent any
+
+    stages {
+        stage('Build') {
+            steps {
+                echo 'Building..'
+                script {
+                    DOCKER_IMAGE = docker.build("your-docker-image-name")
+                }
+            }
+        }
+
+        stage('Test') {
+            steps {
+                echo 'Testing..'
+                // Add your testing steps here
+            }
+        }
+
+        stage('Deliver') {
+            steps {
+                echo 'Delivering..'
+                script {
+                    docker.withRegistry('', 'your-docker-registry-credentials') {
+                        DOCKER_IMAGE.push("latest")
+                    }
+                }
+            }
+        }
+    }
+}
+
+#docker-compose up -d
